@@ -27,8 +27,8 @@ function onSearchPhoto(e) {
 
 function onLoadMore() {
     newApiService.searchImage().then(appendImageMarkup);
-    const lastElement = refs.gallery.lastElementChild;
-    lastElement.scrollIntoView({
+
+    refs.gallery.lastElementChild.scrollIntoView({
         behavior: 'smooth',
         block: 'end',
     });
