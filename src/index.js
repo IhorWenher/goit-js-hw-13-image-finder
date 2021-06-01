@@ -14,14 +14,6 @@ const newApiService = new NewApiService();
 refs.input.addEventListener('input', onSearchPhoto);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
-/*
-const element = document.getElementById('.my-element-selector');
-element.scrollIntoView({
-    behavior: 'smooth',
-    block: 'end',
-});
-*/
-
 function createImageMarkup(imageArray) {
     return imageArray.map(cardsTmpl).join('');
 }
@@ -35,6 +27,10 @@ function onSearchPhoto(e) {
 
 function onLoadMore() {
     newApiService.searchImage().then(appendImageMarkup);
+    refs.gallery.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+    });
 }
 
 function appendImageMarkup(image) {
