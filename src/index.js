@@ -26,8 +26,8 @@ function onSearchPhoto(e) {
     refs.loadMoreBtn.classList.remove('is-hidden');
 }
 
-function onLoadMore() {
-    newApiService.searchImage().then(appendImageMarkup);
+async function onLoadMore() {
+    await newApiService.searchImage().then(appendImageMarkup);
 
     refs.gallery.lastElementChild.scrollIntoView({
         behavior: 'smooth',
