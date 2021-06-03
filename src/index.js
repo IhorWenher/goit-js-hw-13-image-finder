@@ -23,6 +23,7 @@ function onSearchPhoto(e) {
     newApiService.query = e.currentTarget.value;
     newApiService.resetPage();
     newApiService.searchImage().then(appendImageMarkup);
+    refs.loadMoreBtn.classList.remove('is-hidden');
 }
 
 function onLoadMore() {
