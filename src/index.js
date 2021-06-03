@@ -17,17 +17,42 @@ const newApiService = new NewApiService();
 const debouncedSearchPhoto = debounce(onSearchPhoto, 500);
 
 refs.input.addEventListener('input', debouncedSearchPhoto);
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
 refs.gallery.addEventListener('click', respondToTheTick);
+//refs.loadMoreBtn.addEventListener('click', onLoadMore);
 
-function onSearchPhoto() {
+async function onSearchPhoto() {
     refs.gallery.textContent = '';
     newApiService.query = refs.input.value;
     newApiService.resetPage();
-    newApiService.searchImage().then(appendImageMarkup);
-    refs.loadMoreBtn.classList.remove('is-hidden');
+    await newApiService.searchImage().then(appendImageMarkup);
+    //refs.loadMoreBtn.classList.remove('is-hidden');
+
+    //Безконечный скрол
+    let options = {
+        root: null,
+        threshhold: 1,
+        rootMargin: '0px',
+    };
+
+    const observer = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                observer.unobserve(entry.target);
+                asyncLoad();
+            }
+        });
+    }, options);
+
+    async function asyncLoad() {
+        await newApiService.searchImage().then(appendImageMarkup);
+        const target = document.querySelector('.gallery').lastElementChild;
+        observer.observe(target);
+    }
+
+    observer.observe(document.querySelector('.gallery').lastElementChild);
 }
 
+/*
 async function onLoadMore() {
     await newApiService.searchImage().then(appendImageMarkup);
 
@@ -36,6 +61,7 @@ async function onLoadMore() {
         block: 'end',
     });
 }
+*/
 
 function appendImageMarkup(image) {
     refs.gallery.insertAdjacentHTML('beforeend', createImageMarkup(image));
