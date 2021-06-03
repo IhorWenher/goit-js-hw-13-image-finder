@@ -1,7 +1,7 @@
 import './sass/main.scss';
 import cardsTmpl from './image-markup.hbs';
 import NewApiService from './apiService';
-import { debounce } from 'debounce';
+var debounce = require('debounce');
 import * as basicLightbox from 'basiclightbox';
 
 const refs = {
@@ -14,13 +14,15 @@ const refs = {
 
 const newApiService = new NewApiService();
 
-refs.input.addEventListener('input', onSearchPhoto);
+const debouncedSearchPhoto = debounce(onSearchPhoto, 500);
+
+refs.input.addEventListener('input', debouncedSearchPhoto);
 refs.loadMoreBtn.addEventListener('click', onLoadMore);
 refs.gallery.addEventListener('click', respondToTheTick);
 
-function onSearchPhoto(e) {
+function onSearchPhoto() {
     refs.gallery.textContent = '';
-    newApiService.query = e.currentTarget.value;
+    newApiService.query = refs.input.value;
     newApiService.resetPage();
     newApiService.searchImage().then(appendImageMarkup);
     refs.loadMoreBtn.classList.remove('is-hidden');
